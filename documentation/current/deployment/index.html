@@ -430,13 +430,104 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
+/*pre.CodeRay {background-color:#f7f7f8;}*/
+.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
+.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
+.CodeRay .line-numbers strong{color:rgba(0,0,0,.4)}
+table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
+table.CodeRay td{vertical-align: top;line-height:1.45}
+table.CodeRay td.line-numbers{text-align:right}
+table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
+table.CodeRay td.code{padding:0 0 0 .5em}
+table.CodeRay td.code>pre{padding:0}
+.CodeRay .debug{color:#fff !important;background:#000080 !important}
+.CodeRay .annotation{color:#007}
+.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-value{color:#700}
+.CodeRay .binary{color:#509}
+.CodeRay .comment{color:#998;font-style:italic}
+.CodeRay .char{color:#04d}
+.CodeRay .char .content{color:#04d}
+.CodeRay .char .delimiter{color:#039}
+.CodeRay .class{color:#458;font-weight:bold}
+.CodeRay .complex{color:#a08}
+.CodeRay .constant,.CodeRay .predefined-constant{color:#008080}
+.CodeRay .color{color:#099}
+.CodeRay .class-variable{color:#369}
+.CodeRay .decorator{color:#b0b}
+.CodeRay .definition{color:#099}
+.CodeRay .delimiter{color:#000}
+.CodeRay .doc{color:#970}
+.CodeRay .doctype{color:#34b}
+.CodeRay .doc-string{color:#d42}
+.CodeRay .escape{color:#666}
+.CodeRay .entity{color:#800}
+.CodeRay .error{color:#808}
+.CodeRay .exception{color:inherit}
+.CodeRay .filename{color:#099}
+.CodeRay .function{color:#900;font-weight:bold}
+.CodeRay .global-variable{color:#008080}
+.CodeRay .hex{color:#058}
+.CodeRay .integer,.CodeRay .float{color:#099}
+.CodeRay .include{color:#555}
+.CodeRay .inline{color:#000}
+.CodeRay .inline .inline{background:#ccc}
+.CodeRay .inline .inline .inline{background:#bbb}
+.CodeRay .inline .inline-delimiter{color:#d14}
+.CodeRay .inline-delimiter{color:#d14}
+.CodeRay .important{color:#555;font-weight:bold}
+.CodeRay .interpreted{color:#b2b}
+.CodeRay .instance-variable{color:#008080}
+.CodeRay .label{color:#970}
+.CodeRay .local-variable{color:#963}
+.CodeRay .octal{color:#40e}
+.CodeRay .predefined{color:#369}
+.CodeRay .preprocessor{color:#579}
+.CodeRay .pseudo-class{color:#555}
+.CodeRay .directive{font-weight:bold}
+.CodeRay .type{font-weight:bold}
+.CodeRay .predefined-type{color:inherit}
+.CodeRay .reserved,.CodeRay .keyword {color:#000;font-weight:bold}
+.CodeRay .key{color:#808}
+.CodeRay .key .delimiter{color:#606}
+.CodeRay .key .char{color:#80f}
+.CodeRay .value{color:#088}
+.CodeRay .regexp .delimiter{color:#808}
+.CodeRay .regexp .content{color:#808}
+.CodeRay .regexp .modifier{color:#808}
+.CodeRay .regexp .char{color:#d14}
+.CodeRay .regexp .function{color:#404;font-weight:bold}
+.CodeRay .string{color:#d20}
+.CodeRay .string .string .string{background:#ffd0d0}
+.CodeRay .string .content{color:#d14}
+.CodeRay .string .char{color:#d14}
+.CodeRay .string .delimiter{color:#d14}
+.CodeRay .shell{color:#d14}
+.CodeRay .shell .delimiter{color:#d14}
+.CodeRay .symbol{color:#990073}
+.CodeRay .symbol .content{color:#a60}
+.CodeRay .symbol .delimiter{color:#630}
+.CodeRay .tag{color:#008080}
+.CodeRay .tag-special{color:#d70}
+.CodeRay .variable{color:#036}
+.CodeRay .insert{background:#afa}
+.CodeRay .delete{background:#faa}
+.CodeRay .change{color:#aaf;background:#007}
+.CodeRay .head{color:#f8f;background:#505}
+.CodeRay .insert .insert{color:#080}
+.CodeRay .delete .delete{color:#800}
+.CodeRay .change .change{color:#66f}
+.CodeRay .head .head{color:#f4f}
+</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
 <h1>Deployment and Administration of OperatorFabric</h1>
 <div class="details">
-<span id="revnumber">version 1.2.0.RELEASE,</span>
-<span id="revdate">17 April 2020</span>
+<span id="revnumber">version 1.3.0.RELEASE,</span>
+<span id="revdate">23 April 2020</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -520,7 +611,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 the project or by using images releases from <a href="https://hub.docker.com/">Dockerhub</a></p>
 </div>
 <div class="paragraph">
-<p>Service images are all based on <a href="https://hub.docker.com/_/openjdk">openjdk:8-jdk-alpine</a>.</p>
+<p>Service images are all based on <a href="https://hub.docker.com/_/openjdk">openjdk:8-jre-alpine</a>.</p>
 </div>
 <div class="paragraph">
 <p>For simple one instance per service deployment, you can find a sample
@@ -808,7 +899,7 @@ config service backend. those common configuration may be set up in the backend 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   rabbitmq:
     host: rabbitmq
     port: 5672
@@ -879,8 +970,8 @@ removed after a specified duration by using the <a href="https://docs.mongodb.co
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">use operator-fabric
-db.archivedCards.createIndex( { "publishDate": 1 }, { expireAfterSeconds: 864000 } )</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">use operator-fabric
+db.archivedCards.createIndex( { &quot;publishDate&quot;: 1 }, { expireAfterSeconds: 864000 } )</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -1018,7 +1109,7 @@ It helps to avoid typos or missing to report some changes. An example could be f
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>operatorfabric:
+<pre class="CodeRay highlight"><code>operatorfabric:
     security:
         oauth2:
             client-id: opfab-client
@@ -1083,7 +1174,7 @@ the deployment domain</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring.cloud.gateway.routes[0].filters:
+<pre class="CodeRay highlight"><code>spring.cloud.gateway.routes[0].filters:
         - RewritePath=/auth/token(?&lt;path&gt;.*), /auth/realms/dev/protocol/openid-connect/token$\{path}
         - RewritePath=/auth/code/(?&lt;params&gt;.*), /auth/realms/dev/protocol/openid-connect/auth?response_type=code&amp;client_id=opfab-client&amp;$\{params}
         - RewritePath=/auth/check_token, /auth/realms/dev/protocol/openid-connect/token/introspect
@@ -1128,7 +1219,7 @@ is the default port as set in the <code>application.yml</code> used by the <cod
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   cloud:
     gateway:
       routes:
@@ -1205,7 +1296,7 @@ To enable IMPLICIT Flow authentication the following properties need to be set:<
 <h7 id="_example_of_keycloak_configuration_for_operatorfabric_oauth2">Example of Keycloak configuration for OperatorFabric OAuth2</h7>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>operatorfabric:
+<pre class="CodeRay highlight"><code>operatorfabric:
   keycloak:
     realm: dev
   security:
@@ -1250,7 +1341,7 @@ select <code>Dev</code> in the upper select of the right panel then click on Cli
 <h7 id="_example_of_keycloak_configuration_for_operatorfabric_oauth2_2">Example of Keycloak Configuration For OperatorFabric OAuth2</h7>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>operatorfabric:
+<pre class="CodeRay highlight"><code>operatorfabric:
   keycloak:
     realm: dev
   security:
@@ -1641,7 +1732,7 @@ transfer-encoding: chunked
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>operatorfabric:
+<pre class="CodeRay highlight"><code>operatorfabric:
   security:
     jwt:
       groups:
@@ -1667,7 +1758,7 @@ transfer-encoding: chunked
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>{
+<pre class="CodeRay highlight"><code>{
   "jti": "5ff87583-10bd-4946-8753-9d58171c8b7f",
   "exp": 1572979628,
   "nbf": 0,
@@ -1888,7 +1979,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: cards-consultation
   cloud:
@@ -1907,7 +1998,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: cards-consultation
   cloud:
@@ -1934,7 +2025,7 @@ eureka:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: cards-consultation
   cloud:
@@ -1982,7 +2073,7 @@ development environment</p>
 <h6 id="_sample_development_configuration">Sample development configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2104
 logging.level.root: DEBUG</code></pre>
 </div>
@@ -1992,7 +2083,7 @@ logging.level.root: DEBUG</code></pre>
 <h6 id="_sample_docker_image_configuration">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code></code></pre>
+<pre class="CodeRay highlight"><code></code></pre>
 </div>
 </div>
 </div>
@@ -2142,7 +2233,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: cards-publication
   cloud:
@@ -2161,7 +2252,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: cards-publication
   cloud:
@@ -2188,7 +2279,7 @@ eureka:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: cards-publication
   cloud:
@@ -2235,7 +2326,7 @@ development environment</p>
 <h6 id="_sample_development_configuration_2">Sample development configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2102</code></pre>
 </div>
 </div>
@@ -2244,7 +2335,7 @@ development environment</p>
 <h6 id="_sample_docker_image_configuration_2">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code></code></pre>
+<pre class="CodeRay highlight"><code></code></pre>
 </div>
 </div>
 </div>
@@ -2374,7 +2465,7 @@ the deployment domain</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring.cloud.gateway.routes[0].filters:
+<pre class="CodeRay highlight"><code>spring.cloud.gateway.routes[0].filters:
         - RewritePath=/auth/token(?&lt;path&gt;.*), /auth/realms/dev/protocol/openid-connect/token$\{path}
         - RewritePath=/auth/code/(?&lt;params&gt;.*), /auth/realms/dev/protocol/openid-connect/auth?response_type=code&amp;client_id=opfab-client&amp;$\{params}
         - RewritePath=/auth/check_token, /auth/realms/dev/protocol/openid-connect/token/introspect
@@ -2419,7 +2510,7 @@ is the default port as set in the <code>application.yml</code> used by the <cod
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   cloud:
     gateway:
       routes:
@@ -2476,7 +2567,7 @@ equals to <code>actions</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: client-gateway
   cloud:
@@ -2495,7 +2586,7 @@ equals to <code>actions</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: client-gateway
   cloud:
@@ -2521,7 +2612,7 @@ eureka:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: client-gateway
   cloud:
@@ -2570,7 +2661,7 @@ development environment</p>
 <h6 id="_sample_developpement_configuration">Sample developpement configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2002
 spring:
   cloud:
@@ -2602,7 +2693,7 @@ operatorfabric.gateway.configs:
 <h6 id="_sample_docker_image_configuration_3">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   cloud:
     gateway:
       routes:
@@ -2753,7 +2844,7 @@ production.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: config</code></pre>
 </div>
@@ -2763,7 +2854,7 @@ production.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>management:
+<pre class="CodeRay highlight"><code>management:
   endpoints:
     web:
       exposure:
@@ -2785,7 +2876,7 @@ jar working in the development environment</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2000
 spring:
 #  level.root: debug
@@ -2835,7 +2926,7 @@ config from file system)</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   profiles:
     active: [native]
   cloud:
@@ -3030,7 +3121,7 @@ properties:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: registry
   cloud.config:
@@ -3043,7 +3134,7 @@ properties:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: registry
   cloud.config:
@@ -3059,7 +3150,7 @@ properties:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: registry
   cloud.config:
@@ -3072,7 +3163,7 @@ properties:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>eureka:
+<pre class="CodeRay highlight"><code>eureka:
   client:
     register-with-eureka: false
     fetch-registry: false</code></pre>
@@ -3102,7 +3193,7 @@ jar working in the development environment</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2001
 eureka:
   instance.hostname: localhost
@@ -3114,7 +3205,7 @@ eureka:
 <h6 id="_sample_development_configuration_3">Sample development configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2001
 eureka:
   instance.hostname: localhost
@@ -3126,7 +3217,7 @@ eureka:
 <h6 id="_sample_docker_image_configuration_4">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>eureka:
+<pre class="CodeRay highlight"><code>eureka:
   instance.hostname: registry
   client:
     serviceUrl.defaultZone: http://registry:8080/eureka/
@@ -3265,7 +3356,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: thirds
   cloud:
@@ -3284,7 +3375,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: thirds
   cloud:
@@ -3311,7 +3402,7 @@ eureka:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: thirds
   cloud:
@@ -3358,7 +3449,7 @@ development environment</p>
 <h6 id="_sample_development_configuration_4">Sample development configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2100
 operatorfabric.thirds:
   storage:
@@ -3370,7 +3461,7 @@ operatorfabric.thirds:
 <h6 id="_sample_docker_image_configuration_5">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>operatorfabric.thirds:
+<pre class="CodeRay highlight"><code>operatorfabric.thirds:
   storage:
     path: "/thirds-storage"</code></pre>
 </div>
@@ -3516,7 +3607,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: users
   cloud:
@@ -3535,7 +3626,7 @@ usual bootstrap configuration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: users
   cloud:
@@ -3562,7 +3653,7 @@ eureka:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: users
   cloud:
@@ -3609,7 +3700,7 @@ development environment</p>
 <h6 id="_sample_development_configuration_5">Sample development configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2103
 operatorfabric.users.default:
   users:
@@ -3643,7 +3734,7 @@ operatorfabric.users.default:
 <h6 id="_sample_docker_image_configuration_6">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>operatorfabric.users.default:
+<pre class="CodeRay highlight"><code>operatorfabric.users.default:
   users:
   - login: admin
     groups: ["ADMIN"]
@@ -3945,12 +4036,6 @@ while clicking the icon opens in a new tab.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">operatorfabric.time.pulse</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5000</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Duration between two ticks of the internal state of the User Interface</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">operatorfabric.archive.filters.page.size</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
@@ -3979,6 +4064,18 @@ while clicking the icon opens in a new tab.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Control if you want to show or hide the tags filter in settings and feed page</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">operatorfabric.settings.nightDayMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">if you want to activate toggle for night or day mode</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">operatorfabric.settings.styleWhenNightDayModeDesactivated</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">style to apply if not using day night mode, possible value are DAY,NIGHT or LEGACY (black background and white timeline)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">operatorfabric.settings.infos.disable</p></td>
@@ -4156,7 +4253,7 @@ For this default value, with <code>'OperatorFabric'</code> as <code>name</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: web-ui
   cloud:
@@ -4175,7 +4272,7 @@ For this default value, with <code>'OperatorFabric'</code> as <code>name</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: web-ui
   cloud:
@@ -4202,7 +4299,7 @@ eureka:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>spring:
+<pre class="CodeRay highlight"><code>spring:
   application:
     name: web-ui
   cloud:
@@ -4249,7 +4346,7 @@ development environment</p>
 <h6 id="_sample_development_configuration_6">Sample development configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2200
 operatorfabric:
   security:
@@ -4315,6 +4412,7 @@ operatorfabric:
     - fr
   settings:
     locale: en
+    nightDayMode: true
     infos:
       description: true
     about:
@@ -4328,9 +4426,7 @@ operatorfabric:
         rank: 2
       lastapplication:
           name: Wonderful Solution
-          version: 0.1.2-RELEASE
-  time:
-    pulse: 5000</code></pre>
+          version: 0.1.2-RELEASE</code></pre>
 </div>
 </div>
 </div>
@@ -4338,7 +4434,7 @@ operatorfabric:
 <h6 id="_sample_docker_image_configuration_7">Sample docker image configuration</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>server:
+<pre class="CodeRay highlight"><code>server:
   port: 2200
 operatorfabric:
   security:
@@ -4404,6 +4500,7 @@ operatorfabric:
     - fr
   settings:
     locale: en
+    nightDayMode: true
     infos:
       description: true
     about:
@@ -4417,9 +4514,7 @@ operatorfabric:
         rank: 2
       lastapplication:
           name: Wonderful Solution
-          version: 0.1.2-RELEASE
-  time:
-    pulse: 5000</code></pre>
+          version: 0.1.2-RELEASE</code></pre>
 </div>
 </div>
 </div>
