@@ -527,7 +527,7 @@ table.CodeRay td.code>pre{padding:0}
 <h1>OperatorFabric Documentation</h1>
 <div class="details">
 <span id="revnumber">version SNAPSHOT,</span>
-<span id="revdate">05 May 2020</span>
+<span id="revdate">06 May 2020</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -862,7 +862,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_supporting_branches">33.1.2. Supporting branches</a></li>
 </ul>
 </li>
-<li><a href="#_example">33.2. Example</a></li>
+<li><a href="#_examples_and_commands">33.2. Examples and commands</a>
+<ul class="sectlevel3">
+<li><a href="#_initial_state">33.2.1. Initial state</a></li>
+</ul>
+</li>
 <li><a href="#_code_guidelines">33.3. Code Guidelines</a></li>
 <li><a href="#_documentation_guidelines">33.4. Documentation Guidelines</a>
 <ul class="sectlevel3">
@@ -10969,8 +10973,9 @@ should be merged back into master somehow and then tagged with a release number.
 <p>This means that any commit on master is a production-ready release, be it a patch, a minor or a major version.</p>
 </div>
 <div class="paragraph">
-<p>Any commit on <code>master</code> triggers a Travis build generating documentation and docker images for the corresponding
-release version. The docker images are also tagged with <code>latest</code>.</p>
+<p>Any commit on <code>master</code> triggers a Travis build generating and pushing documentation and docker images for the
+corresponding release version. If the <code>ci_latest</code> keyword is used in the commit message, the docker images are also
+tagged with <code>latest</code>.</p>
 </div>
 </div>
 </div>
@@ -10989,14 +10994,11 @@ By contrast, hotfix branches fix bugs in existing releases and give rise to new 
 . A new feature branch is branched off <code>develop</code> before starting work on a feature or bug.
 . Once the developments are deemed ready by the developer(s) working on the feature, a pull request should be created
 for this branch.
-. New pull requests are discussed during daily meetings to assign someone from the Reviewers group to the issue.</p>
-</div>
-<div class="paragraph">
-<p>and it is merged back into
-<code>develop</code> once it is re</p>
-</div>
-<div class="paragraph">
-<p>Feature branches must  and merge back to <code>develop</code>.</p>
+. New pull requests are discussed during daily meetings to assign someone from the Reviewers group to the issue.
+. The pull request author and reviewer(s) then make use of the
+<a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests">Git Hub pull requests</a>
+features (comments, proposed changes, etc.) to make changes to the PR until it meets the project requirements.
+. Once it is ready to be included in the next version, the pull request is then merged back into <code>develop</code>.</p>
 </div>
 <div class="imageblock right text-center">
 <div class="content">
@@ -11039,14 +11041,56 @@ optionally followed by additional information if several branches are associated
 <div class="sect4">
 <h5 id="_release_branches">Release branches</h5>
 <div class="paragraph">
+<p>Once developments are in a release-ready state and have been tested on the <code>develop</code> branch, a release branch should
+be created off <code>develop</code> to prepare the merge into master.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<em>"All features that are targeted for the release-to-be-built must be merged in to develop at this point in time.
+All features targeted at future releases may not—they must wait until after the release branch is branched off."</em>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+By contrast to what is described in the <a href="https://nvie.com/posts/a-successful-git-branching-model/">original blog post</a>, for now we have chosen to
+only create the release branch once the developments are completely ready and tested on the develop branch, so that no
+fixes should be made on the release branch. This simplifies things because it means that release branches don&#8217;t have to
+be merged back into <code>develop</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Once the <code>X.X.X.release</code> branch has been created, a new commit should be made on this branch to change the repository
+version from <code>SNAPSHOT</code> to <code>X.X.X.RELEASE</code>.
+Then, pushing the branch will trigger a build and a "dry-run" generation of documentation and docker images. The aim
+is to detect any issue with this generation before moving to master.</p>
+</div>
+<div class="paragraph">
+<p>Finally, the <code>X.X.X.release</code> can be merged into <code>master</code>, triggering
+The resulting merge commit on <code>master</code> should then be tagged with <code>X.X.X.RELEASE</code>.</p>
+</div>
+<div class="paragraph">
+<p>All commits on <code>master</code> should be merge commits from <code>release</code> branches, direct pushes on master will be disabled.</p>
+</div>
+<div class="paragraph">
 <p><strong>Naming convention:</strong> The name of a release branch should match the repository version it is meant to merge into
 <code>master</code> but in lower case to avoid confusion with release tags on master.</p>
 </div>
 <div class="paragraph">
-<p>Example: The valid branch name for the branch bringing 1.3.0.RELEASE into master is 1.3.0.release</p>
-</div>
-<div class="paragraph">
-<p>All commits on <code>master</code> should be merge commits from <code>release</code> branches, direct pushes on master are be disabled.</p>
+<p>Example: The valid branch name for the branch bringing 1.3.0.RELEASE into <code>master</code> is 1.3.0.release</p>
 </div>
 </div>
 <div class="sect4">
@@ -11096,10 +11140,15 @@ addressing, optionally followed by additional information if several branches ar
 </div>
 </div>
 <div class="sect2">
-<h3 id="_example">33.2. Example</h3>
-<div class="imageblock">
-<div class="content">
-<img src="../images/git-flow.png" alt="Git Flow workflow over time">
+<h3 id="_examples_and_commands">33.2. Examples and commands</h3>
+<div class="sect3">
+<h4 id="_initial_state">33.2.1. Initial state</h4>
+<div class="paragraph">
+<p>In the initial state of our example, only <code>develop</code> and <code>master</code> exist.</p>
+</div>
+<div class="paragraph">
+<p>The repository version in <code>master</code> is <code>1.3.0.RELEASE</code>, and the <code>develop</code> branch has just been branched off it. A single
+commit has been added to <code>develop</code> to change the repository version to <code>SNAPSHOT</code>.</p>
 </div>
 </div>
 </div>
@@ -11878,39 +11927,12 @@ to the account of any member of the team.</p>
 <div class="sect3">
 <h4 id="_travis_ci">37.1.1. Travis CI</h4>
 <div class="paragraph">
-<p>We use Travis CI to manage our pipeline. As of today, it is composed of 3 stages:</p>
+<p>WORK in progress</p>
 </div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-test-assemble
-</td>
-<td class="hdlist2">
-<p>Run on every push regardless of the branch, does the build and produces test reports.
-It also triggers a sonar-scanner analysis and pushes the results to SonarCloud (except for external pull requests).</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-doc
-</td>
-<td class="hdlist2">
-<p>Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
-ci_documentation. It generates the documentation (adoc, javadoc, compodoc, reports) and pushes it to the opfab.github.io
-repository to update the website.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-docker
-</td>
-<td class="hdlist2">
-<p>Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
-ci_docker. It generates the docker images for the current version and pushes them to DockerHub.</p>
-</td>
-</tr>
-</table>
+<div class="imageblock">
+<div class="content">
+<img src="../images/tmp_CICD_stages.png" alt="tmp CICD stages">
+</div>
 </div>
 </div>
 <div class="sect3">
