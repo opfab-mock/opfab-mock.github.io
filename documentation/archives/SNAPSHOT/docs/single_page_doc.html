@@ -527,7 +527,7 @@ table.CodeRay td.code>pre{padding:0}
 <h1>OperatorFabric Documentation</h1>
 <div class="details">
 <span id="revnumber">version SNAPSHOT,</span>
-<span id="revdate">06 May 2020</span>
+<span id="revdate">07 May 2020</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -593,7 +593,11 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_i_cant_upload_my_bundle">7.2. I can&#8217;t upload my bundle</a>
 <ul class="sectlevel3">
-<li><a href="#_format_verification">7.2.1. Format verification</a></li>
+<li><a href="#_format_verification">7.2.1. Format verification</a>
+<ul class="sectlevel4">
+<li><a href="#_linux_solution">Linux solution</a></li>
+</ul>
+</li>
 <li><a href="#_solution_2">7.2.2. Solution</a></li>
 </ul>
 </li>
@@ -629,12 +633,23 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_declaring_a_third_party_service">11.1. Declaring a Third Party Service</a>
 <ul class="sectlevel3">
 <li><a href="#_requirements">11.1.1. Requirements</a></li>
-<li><a href="#_bundle">11.1.2. Bundle</a></li>
+<li><a href="#_bundle">11.1.2. Bundle</a>
+<ul class="sectlevel4">
+<li><a href="#_the_config_json_file">The config.json file</a></li>
+<li><a href="#_i18n">i18n</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#bundle_technical_overview">11.2. Bundle Technical overview</a>
 <ul class="sectlevel3">
-<li><a href="#resource-serving">11.2.1. Resource serving</a></li>
+<li><a href="#resource-serving">11.2.1. Resource serving</a>
+<ul class="sectlevel4">
+<li><a href="#css">CSS</a></li>
+<li><a href="#internationalization">Internationalization</a></li>
+<li><a href="#templates">Templates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -643,9 +658,17 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_users_groups_and_entities">12.1. Users, groups and entities</a>
 <ul class="sectlevel3">
-<li><a href="#_users">12.1.1. Users</a></li>
+<li><a href="#_users">12.1.1. Users</a>
+<ul class="sectlevel4">
+<li><a href="#_automated_user_creation">Automated user creation</a></li>
+</ul>
+</li>
 <li><a href="#_groups">12.1.2. Groups</a></li>
-<li><a href="#_entities">12.1.3. Entities</a></li>
+<li><a href="#_entities">12.1.3. Entities</a>
+<ul class="sectlevel4">
+<li><a href="#_alternative_way_to_manage_groups">Alternative way to manage groups</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -654,16 +677,53 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#card_structure">13.1. Card Structure</a>
 <ul class="sectlevel3">
-<li><a href="#_technical_information_of_the_card">13.1.1. Technical Information of the card</a></li>
-<li><a href="#_user_destined_information_of_the_card">13.1.2. User destined Information of the card</a></li>
-<li><a href="#_presentation_information_of_the_card">13.1.3. Presentation Information of the card</a></li>
+<li><a href="#_technical_information_of_the_card">13.1.1. Technical Information of the card</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_information">Mandatory information</a></li>
+<li><a href="#_recipient_recipient">Recipient (<code>recipient</code>)</a></li>
+<li><a href="#_card_life_management_configuration">Card Life Management Configuration</a></li>
+<li><a href="#_optional_information">Optional information</a></li>
+<li><a href="#_last_time_to_decide_lttd">Last Time to Decide (<code>lttd</code>)</a></li>
+<li><a href="#_store_information">Store information</a></li>
+<li><a href="#_other_technical_attributes">Other technical attributes</a></li>
+<li><a href="#_publish_date_publishdate">Publish Date (<code>publishDate</code>)</a></li>
+<li><a href="#_deletion_date_deletiondate">Deletion Date (`deletionDate°)</a></li>
+</ul>
+</li>
+<li><a href="#_user_destined_information_of_the_card">13.1.2. User destined Information of the card</a>
+<ul class="sectlevel4">
+<li><a href="#_in_card_format">in Card Format</a></li>
+<li><a href="#_custom_part">Custom part</a></li>
+</ul>
+</li>
+<li><a href="#_presentation_information_of_the_card">13.1.3. Presentation Information of the card</a>
+<ul class="sectlevel4">
+<li><a href="#_details_details">details (<code>details</code>)</a></li>
+<li><a href="#_timespans_timespans">TimeSpans (<code>timeSpans</code>)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_cards_examples">13.2. Cards Examples</a>
 <ul class="sectlevel3">
-<li><a href="#minimal_card">13.2.1. Minimal Card</a></li>
-<li><a href="#_regular_card">13.2.2. Regular Card</a></li>
-<li><a href="#display_rules">13.2.3. Display Rules</a></li>
+<li><a href="#minimal_card">13.2.1. Minimal Card</a>
+<ul class="sectlevel4">
+<li><a href="#_send_to_one_user">Send to One User</a></li>
+<li><a href="#_send_to_several_users">Send to several users</a></li>
+</ul>
+</li>
+<li><a href="#_regular_card">13.2.2. Regular Card</a>
+<ul class="sectlevel4">
+<li><a href="#_full_of_hidden_data">Full of Hidden data</a></li>
+<li><a href="#_fully_useful">Fully useful</a></li>
+</ul>
+</li>
+<li><a href="#display_rules">13.2.3. Display Rules</a>
+<ul class="sectlevel4">
+<li><a href="#_dates">Dates</a></li>
+<li><a href="#card_recipients">Recipients</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -707,22 +767,92 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#opfab_spec_conf">18.3. OperatorFabric Specific configuration</a>
 <ul class="sectlevel3">
-<li><a href="#_security_configuration">18.3.1. Security Configuration</a></li>
+<li><a href="#_security_configuration">18.3.1. Security Configuration</a>
+<ul class="sectlevel4">
+<li><a href="#_common_configuration">Common configuration</a></li>
+<li><a href="#_oauth2_flows_and_specific_configuration">OAuth2 Flows and specific configuration</a></li>
+<li><a href="#_using_token">Using token</a></li>
+</ul>
+</li>
 <li><a href="#_user_creation">18.3.2. User creation</a></li>
 <li><a href="#_alternative_way_to_manage_groups_andor_entities">18.3.3. Alternative way to manage groups (and/or entities)</a></li>
 </ul>
 </li>
 <li><a href="#_service_specific_configuration">18.4. Service-specific configuration</a>
 <ul class="sectlevel3">
-<li><a href="#_actions_business_service">18.4.1. Actions Business service</a></li>
-<li><a href="#_cards_consultation_business_service">18.4.2. Cards-Consultation Business service</a></li>
-<li><a href="#_cards_publication_business_service">18.4.3. Cards-Publication Business service</a></li>
-<li><a href="#cloud_gateway_service_config">18.4.4. Cloud Gateway service</a></li>
-<li><a href="#cloud_config_service_config">18.4.5. Cloud Configuration service</a></li>
-<li><a href="#cloud_registry_service_config">18.4.6. Cloud Registry service</a></li>
-<li><a href="#_thirds_business_service">18.4.7. Thirds Business service</a></li>
-<li><a href="#_users_business_service">18.4.8. Users Business service</a></li>
-<li><a href="#_web_ui">18.4.9. Web UI</a></li>
+<li><a href="#_actions_business_service">18.4.1. Actions Business service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_launching_a_jar_file">Specifying external configuration properties when launching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_a_docker_image">Specifying configuration properties when launching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_on_kubernetes">Specifying configuration properties when launching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#_cards_consultation_business_service">18.4.2. Cards-Consultation Business service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_2">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_launching_a_jar_file_2">Specifying external configuration properties when launching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_a_docker_image_2">Specifying configuration properties when launching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_on_kubernetes_2">Specifying configuration properties when launching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#_cards_publication_business_service">18.4.3. Cards-Publication Business service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_3">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_launching_a_jar_file_3">Specifying external configuration properties when launching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_a_docker_image_3">Specifying configuration properties when launching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_on_kubernetes_3">Specifying configuration properties when launching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#cloud_gateway_service_config">18.4.4. Cloud Gateway service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_4">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_filters_and_cors_configuration_2">Filters and CORS configuration</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_lauching_a_jar_file">Specifying external configuration properties when lauching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_a_docker_image">Specifying configuration properties when lauching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_on_kubernetes">Specifying configuration properties when lauching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#cloud_config_service_config">18.4.5. Cloud Configuration service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_5">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_lauching_a_jar_file_2">Specifying external configuration properties when lauching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_a_docker_image_2">Specifying configuration properties when lauching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_on_kubernetes_2">Specifying configuration properties when lauching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#cloud_registry_service_config">18.4.6. Cloud Registry service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_6">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_lauching_a_jar_file_3">Specifying external configuration properties when lauching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_a_docker_image_3">Specifying configuration properties when lauching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_on_kubernetes_3">Specifying configuration properties when lauching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#_thirds_business_service">18.4.7. Thirds Business service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_7">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_launching_a_jar_file_4">Specifying external configuration properties when launching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_a_docker_image_4">Specifying configuration properties when launching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_on_kubernetes_4">Specifying configuration properties when launching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#_users_business_service">18.4.8. Users Business service</a>
+<ul class="sectlevel4">
+<li><a href="#_mandatory_configuration_profiles_and_default_properties_8">Mandatory configuration, Profiles and default properties</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_launching_a_jar_file_5">Specifying external configuration properties when launching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_a_docker_image_5">Specifying configuration properties when launching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_launching_on_kubernetes_5">Specifying configuration properties when launching on Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#_web_ui">18.4.9. Web UI</a>
+<ul class="sectlevel4">
+<li><a href="#_nginx_configuration">NGINX configuration</a></li>
+<li><a href="#_specifying_external_configuration_properties_when_lauching_a_jar_file_4">Specifying external configuration properties when lauching a jar file</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_a_docker_image_4">Specifying configuration properties when lauching a docker image</a></li>
+<li><a href="#_specifying_configuration_properties_when_lauching_on_kubernetes_4">Specifying configuration properties when lauching on Kubernetes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_users_groups_and_entities_administration">18.5. Users, Groups and Entities Administration</a>
@@ -817,7 +947,15 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#gradle_tasks">26.2. Gradle Tasks</a>
 <ul class="sectlevel3">
-<li><a href="#_services">26.2.1. Services</a></li>
+<li><a href="#_services">26.2.1. Services</a>
+<ul class="sectlevel4">
+<li><a href="#_common_tasks_for_all_sub_projects">Common tasks for all sub-projects</a></li>
+<li><a href="#_core">Core</a></li>
+<li><a href="#_thirds_service_2">Thirds Service</a></li>
+<li><a href="#_infraconfig">infra/config</a></li>
+<li><a href="#_toolsgeneric">tools/generic</a></li>
+</ul>
+</li>
 <li><a href="#_gradle_plugins">26.2.2. Gradle Plugins</a></li>
 </ul>
 </li>
@@ -858,8 +996,19 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_principles">33.1. Principles</a>
 <ul class="sectlevel3">
-<li><a href="#_main_branches">33.1.1. Main branches</a></li>
-<li><a href="#_supporting_branches">33.1.2. Supporting branches</a></li>
+<li><a href="#_main_branches">33.1.1. Main branches</a>
+<ul class="sectlevel4">
+<li><a href="#_develop_branch"><code>develop</code> branch</a></li>
+<li><a href="#_master_branch"><code>master</code> branch</a></li>
+</ul>
+</li>
+<li><a href="#_supporting_branches">33.1.2. Supporting branches</a>
+<ul class="sectlevel4">
+<li><a href="#_feature_branches">Feature branches</a></li>
+<li><a href="#_release_branches">Release branches</a></li>
+<li><a href="#_hotfix">Hotfix</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_examples_and_commands">33.2. Examples and commands</a>
@@ -11400,7 +11549,7 @@ set in the configuration of the asciidoctor gradle task:</p>
                 revdate             : operatorfabric.revisionDate,
                 sectnums            : <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>,
                 toc                 : <span class="string"><span class="delimiter">'</span><span class="content">left</span><span class="delimiter">'</span></span>,
-                toclevels           : <span class="string"><span class="delimiter">'</span><span class="content">3</span><span class="delimiter">'</span></span>,
+                toclevels           : <span class="string"><span class="delimiter">'</span><span class="content">4</span><span class="delimiter">'</span></span>,
                 icons               : <span class="string"><span class="delimiter">'</span><span class="content">font</span><span class="delimiter">'</span></span>,
                 <span class="string"><span class="delimiter">&quot;</span><span class="content">hide-uri-scheme</span><span class="delimiter">&quot;</span></span>   : <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>,
                 <span class="string"><span class="delimiter">&quot;</span><span class="content">source-highlighter</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">coderay</span><span class="delimiter">'</span></span>
