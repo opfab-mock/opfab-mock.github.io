@@ -2,7 +2,7 @@ window.swaggerSpec={
   "swagger" : "2.0",
   "info" : {
     "description" : "OperatorFabric User Management API",
-    "version" : "1.3.0.RELEASE",
+    "version" : "1.4.0.RELEASE",
     "title" : "User Management",
     "termsOfService" : "",
     "contact" : {
@@ -25,6 +25,9 @@ window.swaggerSpec={
   }, {
     "name" : "entities",
     "description" : "Everything concerning entities"
+  }, {
+    "name" : "perimeters",
+    "description" : "Everything concerning perimeters"
   } ],
   "schemes" : [ "http" ],
   "definitions" : {
@@ -81,22 +84,33 @@ window.swaggerSpec={
         "login" : "jcleese",
         "firstName" : "John",
         "lastName" : "Cleese",
-        "groups" : [ "Monty Python", "Wanda" ],
+        "groups" : [ "MONTY", "WANDA" ],
         "entities" : [ "ENTITY1", "ENTITY2" ]
       }
     },
     "Group" : {
       "type" : "object",
       "properties" : {
+        "id" : {
+          "type" : "string"
+        },
         "name" : {
           "type" : "string"
         },
         "description" : {
           "type" : "string"
+        },
+        "perimeters" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "uniqueItems" : true
+          }
         }
       },
-      "required" : [ "name" ],
+      "required" : [ "id" ],
       "example" : {
+        "id" : "WANDA",
         "name" : "Wanda",
         "description" : "They were not as successful in Fierce Creatures."
       }
@@ -119,6 +133,35 @@ window.swaggerSpec={
         "id" : "ENTITY1",
         "name" : "Entity 1 name",
         "description" : "Entity 1 short description"
+      }
+    },
+    "RightsEnum" : {
+      "type" : "string",
+      "description" : "Different rights possible >\n* Read: Only read rights (reading card)\n* ReadAndWrite: Read and write rights (reading card and creating new card)\n* ReadAndRespond: Read and respond rights (reading card and responding to card)\n* All: Read, write and respond rights (reading card, creating new card and responding to a card)",
+      "enum" : [ "Read", "ReadAndWrite", "ReadAndRespond", "All" ]
+    },
+    "Perimeter" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "process" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "rights" : {
+          "$ref" : "#/definitions/RightsEnum"
+        }
+      },
+      "required" : [ "id" ],
+      "example" : {
+        "id" : "Process1Perimeter1",
+        "process" : "Process1",
+        "state" : "State1",
+        "rights" : "Read"
       }
     },
     "UserSettings" : {
@@ -193,6 +236,37 @@ window.swaggerSpec={
         "dateFormat" : "L",
         "defaultTags" : [ "humor", "movies" ]
       }
+    },
+    "CurrentUserWithPerimeters" : {
+      "type" : "object",
+      "description" : "Information about the user connected and his perimeters",
+      "properties" : {
+        "userData" : {
+          "type" : "object",
+          "$ref" : "#/definitions/User"
+        },
+        "computedPerimeters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ComputedPerimeter",
+            "uniqueItems" : true
+          }
+        }
+      }
+    },
+    "ComputedPerimeter" : {
+      "type" : "object",
+      "properties" : {
+        "process" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "rights" : {
+          "$ref" : "#/definitions/RightsEnum"
+        }
+      }
     }
   },
   "paths" : {
@@ -217,13 +291,13 @@ window.swaggerSpec={
                 "login" : "jcleese",
                 "firstName" : "John",
                 "lastName" : "Cleese",
-                "groups" : [ "Monty Python", "Wanda" ],
+                "groups" : [ "MONTY", "WANDA" ],
                 "entities" : [ "ENITY1", "ENTITY2" ]
               }, {
                 "login" : "gchapman",
                 "firstName" : "Graham",
                 "lastName" : "Chapman",
-                "groups" : [ "Monty Python" ],
+                "groups" : [ "MONTY" ],
                 "entities" : [ "ENITY1" ]
               } ]
             }
@@ -492,9 +566,11 @@ window.swaggerSpec={
             },
             "examples" : {
               "application/json" : [ {
+                "id" : "WANDA",
                 "name" : "Wanda",
                 "description" : "They were not as successful in Fierce Creatures"
               }, {
+                "id" : "MARXB",
                 "name" : "Marx Brothers",
                 "description" : "Chico, Groucho and Harpo, forget about Zeppo and Gummo"
               } ]
@@ -548,7 +624,7 @@ window.swaggerSpec={
         }
       }
     },
-    "/groups/{name}" : {
+    "/groups/{id}" : {
       "put" : {
         "tags" : [ "groups" ],
         "summary" : "Update existing group",
@@ -558,14 +634,14 @@ window.swaggerSpec={
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
-          "name" : "name",
-          "description" : "Name of group to be updated (should match name in request body)",
+          "name" : "id",
+          "description" : "Id of group to be updated (should match \"id group\" in request body)",
           "type" : "string",
           "required" : true
         }, {
           "in" : "body",
           "name" : "group",
-          "description" : "Updated group data (should match name path parameter)",
+          "description" : "Updated group data (should match \"id group\" path parameter)",
           "schema" : {
             "$ref" : "#/definitions/Group"
           }
@@ -584,7 +660,7 @@ window.swaggerSpec={
             }
           },
           "400" : {
-            "description" : "Bad request (body doesn't match name path parameter)"
+            "description" : "Bad request (body doesn't match \"id group\" path parameter)"
           },
           "401" : {
             "description" : "Authentication required"
@@ -602,8 +678,8 @@ window.swaggerSpec={
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
-          "name" : "name",
-          "description" : "Group name",
+          "name" : "id",
+          "description" : "Group id",
           "type" : "string",
           "required" : true
         } ],
@@ -626,7 +702,7 @@ window.swaggerSpec={
         }
       }
     },
-    "/groups/{name}/users" : {
+    "/groups/{id}/users" : {
       "put" : {
         "tags" : [ "groups", "users" ],
         "summary" : "Update list of group users",
@@ -636,14 +712,14 @@ window.swaggerSpec={
         "consumes" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
-          "name" : "name",
-          "description" : "Group name",
+          "name" : "id",
+          "description" : "Group id",
           "type" : "string",
           "required" : true
         }, {
           "in" : "body",
           "name" : "users",
-          "description" : "Array of user logins representing exactly the intended list of group users after update",
+          "description" : "Array of user ids representing exactly the intended list of group users after update",
           "schema" : {
             "type" : "array",
             "items" : {
@@ -672,20 +748,20 @@ window.swaggerSpec={
       "patch" : {
         "tags" : [ "groups", "users" ],
         "summary" : "Add users to group",
-        "description" : "ONLY add users to group (no deletions)",
+        "description" : "ONLY add users to group (no deletion)",
         "operationId" : "addGroupUsers",
         "produces" : [ "application/json" ],
         "consumes" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
-          "name" : "name",
-          "description" : "Group name",
+          "name" : "id",
+          "description" : "Group id",
           "type" : "string",
           "required" : true
         }, {
           "in" : "body",
           "name" : "users",
-          "description" : "Array of user logins to be added to group",
+          "description" : "Array of user ids to be added to group",
           "schema" : {
             "type" : "array",
             "items" : {
@@ -719,8 +795,8 @@ window.swaggerSpec={
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
-          "name" : "name",
-          "description" : "Group name",
+          "name" : "id",
+          "description" : "Group id",
           "type" : "string",
           "required" : true
         } ],
@@ -743,17 +819,17 @@ window.swaggerSpec={
         }
       }
     },
-    "/groups/{name}/users/{login}" : {
+    "/groups/{id}/users/{login}" : {
       "delete" : {
         "tags" : [ "groups", "users" ],
         "summary" : "Remove user from group",
-        "description" : "ONLY remove user from group (no additions)",
+        "description" : "ONLY remove user from group (no addition)",
         "operationId" : "deleteGroupUser",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
-          "name" : "name",
-          "description" : "Group name",
+          "name" : "id",
+          "description" : "Group id",
           "type" : "string",
           "required" : true
         }, {
@@ -785,8 +861,8 @@ window.swaggerSpec={
     "/entities" : {
       "get" : {
         "tags" : [ "entities" ],
-        "summary" : "Fetch a list of all existing entities",
-        "description" : "Fetch a list of all existing entities, with pagination and filter options",
+        "summary" : "Fetch a list of all existing entities.",
+        "description" : "Fetch a list of all existing entities, with pagination and filter options. Caution : work is still in progress, please do not use it.",
         "operationId" : "fetchEntities",
         "produces" : [ "application/json" ],
         "responses" : {
@@ -821,7 +897,7 @@ window.swaggerSpec={
       "post" : {
         "tags" : [ "entities" ],
         "summary" : "Create a new entity of users",
-        "description" : "Create a new entity of users",
+        "description" : "Create a new entity of users. Caution : work is still in progress, please do not use it.",
         "operationId" : "createEntity",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -862,7 +938,7 @@ window.swaggerSpec={
       "put" : {
         "tags" : [ "entities" ],
         "summary" : "Update existing entity",
-        "description" : "Update existing entity",
+        "description" : "Update existing entity. Caution : work is still in progress, please do not use it.",
         "operationId" : "updateEntity",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -907,7 +983,7 @@ window.swaggerSpec={
       "get" : {
         "tags" : [ "entities" ],
         "summary" : "Fetch an existing entity of users",
-        "description" : "Fetch an existing entity of users",
+        "description" : "Fetch an existing entity of users. Caution : work is still in progress, please do not use it.",
         "operationId" : "fetchEntity",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -940,7 +1016,7 @@ window.swaggerSpec={
       "put" : {
         "tags" : [ "entities", "users" ],
         "summary" : "Update list of entity users",
-        "description" : "Update list of entity users, users not included in given list are removed from entity",
+        "description" : "Update list of entity users, users not included in given list are removed from entity. Caution : work is still in progress, please do not use it.",
         "operationId" : "updateEntityUsers",
         "produces" : [ "application/json" ],
         "consumes" : [ "application/json" ],
@@ -982,7 +1058,7 @@ window.swaggerSpec={
       "patch" : {
         "tags" : [ "entities", "users" ],
         "summary" : "Add users to entity",
-        "description" : "ONLY add users to entity (no deletions)",
+        "description" : "ONLY add users to entity (no deletion). Caution : work is still in progress, please do not use it.",
         "operationId" : "addEntityUsers",
         "produces" : [ "application/json" ],
         "consumes" : [ "application/json" ],
@@ -1024,7 +1100,7 @@ window.swaggerSpec={
       "delete" : {
         "tags" : [ "entities", "users" ],
         "summary" : "Remove all users from entity",
-        "description" : "remove all users from entity",
+        "description" : "remove all users from entity. Caution : work is still in progress, please do not use it.",
         "operationId" : "deleteEntityUsers",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -1057,7 +1133,7 @@ window.swaggerSpec={
       "delete" : {
         "tags" : [ "entities", "users" ],
         "summary" : "Remove user from entity",
-        "description" : "ONLY remove user from entity (no additions)",
+        "description" : "ONLY remove user from entity (no addition). Caution : work is still in progress, please do not use it.",
         "operationId" : "deleteEntityUser",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -1088,6 +1164,535 @@ window.swaggerSpec={
           },
           "404" : {
             "description" : "Required entity not found"
+          }
+        }
+      }
+    },
+    "/perimeters" : {
+      "get" : {
+        "tags" : [ "perimeters" ],
+        "summary" : "Fetch a list of all existing perimeters",
+        "description" : "Fetch a list of all existing perimeters. Caution : work is still in progress, please do not use it.",
+        "operationId" : "fetchPerimeters",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Perimeter"
+              }
+            },
+            "examples" : {
+              "application/json" : [ {
+                "id" : "Process1Perimeter1",
+                "process" : "Process1",
+                "state" : "State1",
+                "rights" : "Read"
+              }, {
+                "id" : "Process1Perimeter2",
+                "process" : "Process1",
+                "state" : "State1",
+                "rights" : "ReadAndWrite"
+              } ]
+            }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "perimeters" ],
+        "summary" : "Create a new perimeter",
+        "description" : "Create a new perimeter. Caution : work is still in progress, please do not use it.",
+        "operationId" : "createPerimeter",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "perimeter",
+          "description" : "Perimeter to be created",
+          "schema" : {
+            "$ref" : "#/definitions/Perimeter"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "$ref" : "#/definitions/Perimeter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request (duplicate key)"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          }
+        }
+      }
+    },
+    "/perimeters/{id}" : {
+      "put" : {
+        "tags" : [ "perimeters" ],
+        "summary" : "Update existing perimeter",
+        "description" : "Update existing perimeter. Caution : work is still in progress, please do not use it.",
+        "operationId" : "updatePerimeter",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Id of perimeter to be updated (should match id in request body)",
+          "type" : "string",
+          "required" : true
+        }, {
+          "in" : "body",
+          "name" : "perimeter",
+          "description" : "Updated perimeter data (should match id path parameter)",
+          "schema" : {
+            "$ref" : "#/definitions/Perimeter"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Updated",
+            "schema" : {
+              "$ref" : "#/definitions/Perimeter"
+            }
+          },
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "$ref" : "#/definitions/Perimeter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request (body doesn't match id path parameter)"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "perimeters" ],
+        "summary" : "Fetch an existing perimeter",
+        "description" : "Fetch an existing perimeter. Caution : work is still in progress, please do not use it.",
+        "operationId" : "fetchPerimeter",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Perimeter id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Perimeter"
+            }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required perimeter not found"
+          }
+        }
+      }
+    },
+    "/perimeters/{id}/groups" : {
+      "put" : {
+        "tags" : [ "perimeters", "groups" ],
+        "summary" : "Update list of groups that have this perimeter",
+        "description" : "Update list of groups that have this perimeter, groups not included in given list lose this perimeter. Caution : work is still in progress, please do not use it.",
+        "operationId" : "updatePerimeterGroups",
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Perimeter id",
+          "type" : "string",
+          "required" : true
+        }, {
+          "in" : "body",
+          "name" : "groups",
+          "description" : "Array of group id representing exactly the intended list of groups that must have this perimeter after update",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Updated"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required perimeter not found"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "perimeters", "groups" ],
+        "summary" : "Add groups to perimeter",
+        "description" : "ONLY add groups to perimeter (no deletion). Caution : work is still in progress, please do not use it.",
+        "operationId" : "addPerimeterGroups",
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Perimeter id",
+          "type" : "string",
+          "required" : true
+        }, {
+          "in" : "body",
+          "name" : "groups",
+          "description" : "Array of group id to be added to perimeter",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Updated"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required perimeter not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "perimeters", "groups" ],
+        "summary" : "Remove all groups from perimeter",
+        "description" : "remove all groups from perimeter. Caution : work is still in progress, please do not use it.",
+        "operationId" : "deletePerimeterGroups",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Perimeter id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required perimeter not found"
+          }
+        }
+      }
+    },
+    "/perimeters/{idPerimeter}/groups/{idGroup}" : {
+      "delete" : {
+        "tags" : [ "perimeters", "groups" ],
+        "summary" : "Remove group from perimeter",
+        "description" : "ONLY remove group from perimeter (no addition). Caution : work is still in progress, please do not use it.",
+        "operationId" : "deletePerimeterGroup",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "idPerimeter",
+          "description" : "Perimeter id",
+          "type" : "string",
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "idGroup",
+          "description" : "Group id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required perimeter not found"
+          }
+        }
+      }
+    },
+    "/groups/{id}/perimeters" : {
+      "get" : {
+        "tags" : [ "groups", "perimeters" ],
+        "summary" : "Fetch an existing group's perimeters",
+        "description" : "Fetch existing group's perimeters from their id. Caution : work is still in progress, please do not use it.",
+        "operationId" : "fetchGroupPerimeters",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "group id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Perimeter"
+              }
+            },
+            "examples" : {
+              "application/json" : [ {
+                "id" : "Process1Perimeter1",
+                "process" : "Process1",
+                "state" : "State1",
+                "rights" : "Read"
+              }, {
+                "id" : "Process1Perimeter2",
+                "process" : "Process1",
+                "state" : "State1",
+                "rights" : "ReadAndWrite"
+              } ]
+            }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required group not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "groups", "perimeters" ],
+        "summary" : "Update list of perimeters for group",
+        "description" : "Update list of perimeters for group, perimeters not included in given list are no longer linked to the group. Caution : work is still in progress, please do not use it.",
+        "operationId" : "updateGroupPerimeters",
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Group id",
+          "type" : "string",
+          "required" : true
+        }, {
+          "in" : "body",
+          "name" : "perimeters",
+          "description" : "Array of perimeter id representing exactly the intended list of perimeters that must be linked to the group after update",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Updated"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required group not found"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "groups", "perimeters" ],
+        "summary" : "Add perimeters to group",
+        "description" : "ONLY add perimeters to group (no deletion). Caution : work is still in progress, please do not use it.",
+        "operationId" : "addGroupPerimeters",
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Group id",
+          "type" : "string",
+          "required" : true
+        }, {
+          "in" : "body",
+          "name" : "perimeters",
+          "description" : "Array of perimeter id to be added to group",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Updated"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required group not found"
+          }
+        }
+      }
+    },
+    "/users/{login}/perimeters" : {
+      "get" : {
+        "tags" : [ "users", "perimeters" ],
+        "summary" : "Fetch an existing user's perimeters",
+        "description" : "Fetch existing user's perimeters from their login. Caution : work is still in progress, please do not use it.",
+        "operationId" : "fetchUserPerimeters",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "login",
+          "description" : "user login",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Perimeter"
+              }
+            },
+            "examples" : {
+              "application/json" : [ {
+                "id" : "Process1Perimeter1",
+                "process" : "Process1",
+                "state" : "State1",
+                "rights" : "Read"
+              }, {
+                "id" : "Process1Perimeter2",
+                "process" : "Process1",
+                "state" : "State1",
+                "rights" : "ReadAndWrite"
+              } ]
+            }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Authenticated users who are not admins can only access their own data"
+          },
+          "404" : {
+            "description" : "Required user not found"
+          }
+        }
+      }
+    },
+    "/CurrentUserWithPerimeters" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "Get information about the user connected and his perimeters",
+        "description" : "Get information about the user connected and his perimeters. Caution : work is still in progress, please do not use it.",
+        "operationId" : "fetchCurrentUserWithPerimeters",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object",
+              "$ref" : "#/definitions/CurrentUserWithPerimeters"
+            },
+            "examples" : {
+              "application/json" : {
+                "userData" : {
+                  "login" : "jcleese",
+                  "firstName" : "John",
+                  "lastName" : "Cleese",
+                  "groups" : [ "MONTY", "WANDA" ],
+                  "entities" : [ "ENITY1", "ENTITY2" ]
+                },
+                "computedPerimeters" : [ {
+                  "process" : "Process1",
+                  "state" : "State1",
+                  "rights" : "Read"
+                }, {
+                  "process" : "Process1",
+                  "state" : "State2",
+                  "rights" : "ReadAndWrite"
+                } ]
+              }
+            }
+          },
+          "401" : {
+            "description" : "Authentication required"
           }
         }
       }

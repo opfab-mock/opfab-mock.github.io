@@ -526,8 +526,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>OperatorFabric Getting Started</h1>
 <div class="details">
-<span id="revnumber">version 1.3.0.RELEASE,</span>
-<span id="revdate">28 April 2020</span>
+<span id="revnumber">version 1.4.0.RELEASE,</span>
+<span id="revdate">18 May 2020</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -605,7 +605,7 @@ table.CodeRay td.code>pre{padding:0}
 <p>Docker install with 4Gb of space</p>
 </li>
 <li>
-<p>16Gb of RAM minimal ,32 Gb recommended</p>
+<p>16Gb of RAM minimal, 32 Gb recommended</p>
 </li>
 </ul>
 </div>
@@ -623,13 +623,13 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 <div class="paragraph">
-<p>Launch the <code>startserver.sh</code> in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when no more logs are written on the output(It could continue to log  but slowly).</p>
+<p>Launch the <code>startserver.sh</code> in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when no more logs are written on the output (It could continue to log but slowly).</p>
 </div>
 <div class="paragraph">
 <p>Test the connection to the UI: to connect to OperatorFabric, open in a browser the following page: <a href="http://localhost:2002/ui/" class="bare">localhost:2002/ui/</a> and use <code>tso1-operator</code> as login and <code>test</code> as password.</p>
 </div>
 <div class="paragraph">
-<p>If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL, replacing <code>SERVER_IP</code> by the IP address of your server:</p>
+<p>If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL, replacing <code>SERVER_IP</code> by the IP address of your server :</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -798,7 +798,7 @@ section of the reference documentation.</p>
 <div class="sect2">
 <h3 id="_example_2_publish_a_new_bundle">3.2. Example 2: Publish a new bundle</h3>
 <div class="paragraph">
-<p>The way the card is display in the UI is defined via a Bundle containing templates and process description .</p>
+<p>The way the card is display in the UI is defined via a Bundle containing templates and process description.</p>
 </div>
 <div class="paragraph">
 <p>The bundle structure is the following:</p>
@@ -814,7 +814,7 @@ config.json : process description and global configuration</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1 .</p>
+<p>The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1.</p>
 </div>
 <div class="paragraph">
 <p>We just change the template and the stylesheet instead of displaying:</p>
@@ -856,7 +856,7 @@ The message</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The global configuration is defined in config.json:</p>
+<p>The global configuration is defined in config.json :</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -901,7 +901,7 @@ The message</pre>
 <div class="sect3">
 <h4 id="_get_a_token">3.2.2. Get a Token</h4>
 <div class="paragraph">
-<p>To send the bundle you need to be authentified . To do that you need to get a token with the following command:</p>
+<p>To send the bundle you need to be authenticated. To do that you need to get a token with the following command :</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -917,7 +917,7 @@ The message</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should received JSON a reponse like this:</p>
+<p>You should received JSON a response like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -999,7 +999,7 @@ curl -s -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H
 <div class="sect3">
 <h4 id="_internationalization">3.2.5. Internationalization</h4>
 <div class="paragraph">
-<p>If you switch langage to french in the UI (Settings menu on the top rigth of the screen), you should see the cards in french.</p>
+<p>If you switch language to french in the UI (Settings menu on the top right of the screen), you should see the cards in french.</p>
 </div>
 <div class="paragraph">
 <p>OperatorFabric will use templates define in repository "template/fr" and keys define in "i18n/fr.json".</p>
@@ -1025,7 +1025,7 @@ curl -s -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H
 </ul>
 </div>
 <div class="paragraph">
-<p>To modelize this process in OperatorFabric, we will use a "Process" with "States", we will modelize this in the <code>config.json</code> of the bundle:</p>
+<p>To model this process in OperatorFabric, we will use a "Process" with "States", we will model this in the <code>config.json</code> of the bundle:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1065,7 +1065,7 @@ curl -s -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H
 </div>
 </div>
 <div class="paragraph">
-<p>You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin, criticalSituation-update and criticalSituation-end . For each state we define a title for the card, and the template a stylesheets to use.</p>
+<p>You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin, criticalSituation-update and criticalSituation-end. For each state we define a title for the card, and the template a stylesheets to use.</p>
 </div>
 <div class="paragraph">
 <p>The title is a key which refer to an i18n found in the corresponding i18n repository:</p>
@@ -1116,7 +1116,7 @@ curl -s -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H
 </div>
 </div>
 <div class="paragraph">
-<p>The card refer to the process "criticalSituation" as defined in the config.json, the state attribute is put to "criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via provided script:</p>
+<p>The card refer to the process "criticalSituation" as defined in the config.json, the state attribute is put to "criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via provided script :</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1191,7 +1191,7 @@ getting started). If you want to take a look at its content you can find it unde
 server/thirds-storage/scheduledMaintenance-publisher/1.</p>
 </div>
 <div class="paragraph">
-<p>Before sending the card provide, you need to set the good time values as epoch (ms)  (<a href="https://en.wikipedia.org/wiki/Epoch_(computing)" class="bare">en.wikipedia.org/wiki/Epoch_(computing)</a>) in the json . For each value you set, you will have a point in the timeline . In our example, the first point represent the beginning of the maintenance operation, and the second the end of the maintenance operation.</p>
+<p>Before sending the card provide, you need to set the good time values as epoch (ms)  (<a href="https://en.wikipedia.org/wiki/Epoch_(computing)" class="bare">en.wikipedia.org/wiki/Epoch_(computing)</a>) in the json. For each value you set, you will have a point in the timeline. In our example, the first point represent the beginning of the maintenance operation, and the second the end of the maintenance operation.</p>
 </div>
 <div class="paragraph">
 <p>To get the dates in Epoch, you can use the following commands:</p>

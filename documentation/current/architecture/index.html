@@ -526,8 +526,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>OperatorFabric Architecture</h1>
 <div class="details">
-<span id="revnumber">version 1.3.0.RELEASE,</span>
-<span id="revdate">28 April 2020</span>
+<span id="revnumber">version 1.4.0.RELEASE,</span>
+<span id="revdate">18 May 2020</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -618,8 +618,8 @@ deals with and then showing how this translates into the technical architecture.
 <div class="paragraph">
 <p>OperatorFabric is based on the concept of <strong>cards</strong>, which contain data regarding events that are relevant for the
 operator.
-A third party tool publish cards and the cards are received on the screen of the operators. Depending on the type
-of the cards, the operator  can send back information to the third party via an "action".</p>
+A third party tool publishes cards and the cards are received on the screen of the operators. Depending on the type
+of the cards, the operator can send back information to the third party via an "action".</p>
 </div>
 <div class="sect2">
 <h3 id="_business_components">2.1. Business components</h3>
@@ -629,24 +629,24 @@ of the cards, the operator  can send back information to the third party via an 
 </div>
 </div>
 <div class="paragraph">
-<p>To do the job, the following business components are defined:</p>
+<p>To do the job, the following business components are defined :</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Card Publication : this component receive the cards from third party tools</p>
+<p>Card Publication : this component receives the cards from third party tools</p>
 </li>
 <li>
 <p>Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)</p>
 </li>
 <li>
-<p>Actions : this component receive the action from the operator and send it to the third party tool</p>
+<p>Actions : this component receives the action from the operator and send it to the third party tool</p>
 </li>
 <li>
-<p>Card rendering and process definition : this component store the information for card rendering(templates , internationalization , &#8230;&#8203; ) and a light description of the process associate(states , actions, &#8230;&#8203;) . This configuration data can be provided either by an administrator or by a third party tool.</p>
+<p>Card rendering and process definition : this component stores the information for the card rendering (templates, internationalization, &#8230;&#8203;) and a light description of the process associate (states, actions, &#8230;&#8203;). This configuration data can be provided either by an administrator or by a third party tool.</p>
 </li>
 <li>
-<p>User Management : this component is used to manage users and groups</p>
+<p>User Management : this component is used to manage users, groups and entities.</p>
 </li>
 </ul>
 </div>
@@ -654,7 +654,7 @@ of the cards, the operator  can send back information to the third party via an 
 <div class="sect2">
 <h3 id="_business_objects">2.2. Business objects</h3>
 <div class="paragraph">
-<p>The business objects can be represented as follow:</p>
+<p>The business objects can be represented as follows :</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -667,13 +667,16 @@ of the cards, the operator  can send back information to the third party via an 
 <p>Card : the core business object which contains the data to show to the user(or operator)</p>
 </li>
 <li>
-<p>Publisher : the third party that publishes cards</p>
+<p>Publisher : the third party which publishes cards</p>
 </li>
 <li>
 <p>User : the operator receiving cards and responding via actions</p>
 </li>
 <li>
-<p>Group : a group of users</p>
+<p>Group : a group (containing a list of users)</p>
+</li>
+<li>
+<p>Entity : an entity (containing a list of users)</p>
 </li>
 <li>
 <p>Process : the process the card is dealing with</p>
@@ -711,14 +714,14 @@ of the cards, the operator  can send back information to the third party via an 
 <div class="ulist">
 <ul>
 <li>
-<p>We have a "UI" component that store the static pages and the UI code that is downloaded by the browser. The UI is based an <a href="https://angular.io/">Angular</a> and  <a href="https://handlebarsjs.com/">Handlebars</a> for card templating.</p>
+<p>We have a "UI" component which stores the static pages and the UI code that is downloaded by the browser. The UI is based an <a href="https://angular.io/">Angular</a> and  <a href="https://handlebarsjs.com/">Handlebars</a> for the card templating.</p>
 </li>
 <li>
 <p>The business component named  "Card rendering and process definition" is at the technical level known as "Third service". This service receive card rendering and process definition as a bundle. The bundle is a tar.gz file containing</p>
 <div class="ulist">
 <ul>
 <li>
-<p>json process configuration file (containings states &amp; actions)</p>
+<p>json process configuration file (containing states &amp; actions)</p>
 </li>
 <li>
 <p>templates for rendering</p>
@@ -754,7 +757,7 @@ services to find information about the running services instance and allow for l
 <h4 id="_gateway">3.2.2. Gateway</h4>
 <div class="paragraph">
 <p>It provides a filtered view of the APIS and static served pages for external access through browsers or other http
-compliant accesses. It provide the rooting and load balancing for accessing the micro-services from outside. It is implemented by <a href="https://cloud.spring.io/spring-cloud-gateway/reference/html/">Spring Cloud Gateway</a>.</p>
+compliant accesses. It provides the rooting and load balancing for accessing the micro-services from outside. It is implemented by <a href="https://cloud.spring.io/spring-cloud-gateway/reference/html/">Spring Cloud Gateway</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -773,7 +776,7 @@ to dispatch global configuration changes to all services. It is implemented via 
 <div class="sect3">
 <h4 id="_authentication">3.2.5. Authentication</h4>
 <div class="paragraph">
-<p>The architecture provide a default authentication service via <a href="https://www.keycloak.org/">KeyCloak</a> but it can delegates it to an external provider. Authentication is done through the use of  Oauth2, three flows are supported: implicit, authorization code and password.</p>
+<p>The architecture provides a default authentication service via <a href="https://www.keycloak.org/">KeyCloak</a> but it can delegate it to an external provider. Authentication is done through the use of  Oauth2, three flows are supported : implicit, authorization code and password.</p>
 </div>
 </div>
 <div class="sect3">
