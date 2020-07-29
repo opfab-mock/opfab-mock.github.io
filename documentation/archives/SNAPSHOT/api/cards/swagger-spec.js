@@ -176,11 +176,11 @@ window.swaggerSpec={
           "$ref" : "#/definitions/TitlePositionEnum"
         },
         "templateName" : {
-          "description" : "template unique name as defined by Third Party Bundle in Third Party Service",
+          "description" : "template unique name as defined by Businessconfig Party Bundle in Businessconfig Party Service",
           "type" : "string"
         },
         "styles" : {
-          "description" : "css files names to load as defined by Third Party Bundle in Third Party Service",
+          "description" : "css files names to load as defined by Businessconfig Party Bundle in Businessconfig Party Service",
           "type" : "array",
           "items" : {
             "type" : "string"
@@ -270,21 +270,26 @@ window.swaggerSpec={
           "description" : "Unique card ID (as defined in the associated process)",
           "readOnly" : true
         },
+        "parentCardUid" : {
+          "type" : "string",
+          "description" : "The id of the parent card (optional)",
+          "readOnly" : true
+        },
         "publisher" : {
           "type" : "string",
-          "description" : "Publishing service unique ID"
+          "description" : "Unique ID of the entity or service publishing the card"
         },
-        "publisherVersion" : {
+        "processVersion" : {
           "type" : "string",
-          "description" : "Publishing service version"
+          "description" : "Version of the associated process"
         },
         "process" : {
           "type" : "string",
-          "description" : "associated process name"
+          "description" : "ID of the associated process"
         },
-        "processId" : {
+        "processInstanceId" : {
           "type" : "string",
-          "description" : "Unique process ID of the associated process instance"
+          "description" : "ID of the associated process instance"
         },
         "state" : {
           "type" : "string",
@@ -373,6 +378,14 @@ window.swaggerSpec={
             "type" : "string"
           }
         },
+        "entitiesAllowedToRespond" : {
+          "description" : "List of entities that have to respond",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "example" : [ "tso1", "tso2" ]
+        },
         "entityRecipients" : {
           "description" : "List of entity recipients",
           "type" : "array",
@@ -384,16 +397,24 @@ window.swaggerSpec={
         "data" : {
           "type" : "object",
           "description" : "Business data"
+        },
+        "hasBeenAcknowledged" : {
+          "type" : "boolean",
+          "description" : "Is true if the card was acknowledged by current user"
+        },
+        "hasBeenRead" : {
+          "type" : "boolean",
+          "description" : "Is true if the card was read by current user"
         }
       },
-      "required" : [ "processId", "publisher", "publisherVersion", "severity", "startDate", "title", "summary", "recipient" ],
+      "required" : [ "publisher", "process", "processVersion", "processInstanceId", "severity", "startDate", "title", "summary", "state" ],
       "example" : {
         "uid" : 12345,
         "id" : "cardIdFromMyProcess",
         "publisher" : "MyService",
-        "publisherVersion" : "0.0.1",
+        "processVersion" : "0.0.1",
         "process" : "MyProcess",
-        "processId" : "MyProcess_001",
+        "processInstanceId" : "MyProcess_001",
         "state" : "started",
         "publishDate" : 1546300800000,
         "deletionDate" : 1546388200000,
@@ -496,7 +517,7 @@ window.swaggerSpec={
           "type" : "string",
           "description" : "Publishing service unique ID"
         },
-        "publisherVersion" : {
+        "processVersion" : {
           "type" : "string",
           "description" : "Publishing service version"
         },
@@ -504,7 +525,7 @@ window.swaggerSpec={
           "type" : "string",
           "description" : "associated process name"
         },
-        "processId" : {
+        "processInstanceId" : {
           "type" : "string",
           "description" : "Unique process ID of the associated process instance"
         },
@@ -553,14 +574,27 @@ window.swaggerSpec={
           "items" : {
             "$ref" : "#/definitions/TimeSpan"
           }
+        },
+        "hasBeenAcknowledged" : {
+          "type" : "boolean",
+          "description" : "Is true if the card was acknoledged by current user"
+        },
+        "hasBeenRead" : {
+          "type" : "boolean",
+          "description" : "Is true if the card was read by current user"
+        },
+        "parentCardUid" : {
+          "type" : "string",
+          "description" : "The uid of its parent card if it's a child card"
         }
       },
+      "required" : [ "uid", "id", "processInstanceId", "startDate" ],
       "example" : {
         "uid" : 12345,
         "id" : "cardIdFromMyProcess",
         "publisher" : "MyService",
-        "publisherVersion" : "0.0.1",
-        "processId" : "MyProcess_001",
+        "processVersion" : "0.0.1",
+        "processInstanceId" : "MyProcess_001",
         "lttd" : 1546387230000,
         "startDate" : 1546387200000,
         "endDate" : 1546387250000,
@@ -888,7 +922,7 @@ window.swaggerSpec={
         "name" : "id",
         "type" : "string",
         "required" : true,
-        "description" : "The id parameter is constructed as follows : {publisher}_{processId}"
+        "description" : "The id parameter is constructed as follows : {publisher}_{processInstanceId}"
       } ],
       "delete" : {
         "operationId" : "deleteProcessCard",
@@ -918,6 +952,75 @@ window.swaggerSpec={
           },
           "403" : {
             "description" : "Forbidden - User doesn't have any group"
+          }
+        }
+      }
+    },
+    "/cards/userAcknowledgement/{uid}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "uid",
+        "type" : "string",
+        "required" : true,
+        "description" : "The card uid"
+      } ],
+      "post" : {
+        "operationId" : "postUserAcknowledgement",
+        "tags" : [ "cards", "update", "acknowledgement" ],
+        "summary" : "update current card adding a user acknowledgement",
+        "description" : "update current card users acknowledgements, adding a new item, by card id and authenticated user",
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "200" : {
+            "description" : "No action done, the item already exists"
+          },
+          "404" : {
+            "description" : "Try to remove item from unexisting card"
+          }
+        }
+      },
+      "delete" : {
+        "operationId" : "deleteUserAcknowledgement",
+        "tags" : [ "cards", "delete", "acknowledgement" ],
+        "summary" : "update current card removing a user acknowledgement",
+        "description" : "update current card users acknowledgements, removing an item, by card id and authenticated user",
+        "responses" : {
+          "200" : {
+            "description" : "Item removed"
+          },
+          "204" : {
+            "description" : "Try to remove unexisting item"
+          },
+          "404" : {
+            "description" : "Try to remove item from unexisting card"
+          }
+        }
+      }
+    },
+    "/cards/userRead/{uid}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "uid",
+        "type" : "string",
+        "required" : true,
+        "description" : "The card uid"
+      } ],
+      "post" : {
+        "operationId" : "postUserRead",
+        "tags" : [ "cards", "update", "read" ],
+        "summary" : "update current card adding a user read",
+        "description" : "update current card users reads, adding a new item, by card id and authenticated user",
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "200" : {
+            "description" : "No action done, the item already exists"
+          },
+          "404" : {
+            "description" : "Try to remove item from unexisting card"
           }
         }
       }
