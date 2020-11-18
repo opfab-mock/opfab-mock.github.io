@@ -126,13 +126,20 @@ window.swaggerSpec={
         },
         "description" : {
           "type" : "string"
+        },
+        "parents" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "uniqueItems" : true
+          }
         }
       },
       "required" : [ "id" ],
       "example" : {
         "id" : "ENTITY1",
-        "name" : "Entity 1 name",
-        "description" : "Entity 1 short description"
+        "name" : "Control Room 1",
+        "description" : "Control Room 1"
       }
     },
     "RightsEnum" : {
@@ -193,10 +200,6 @@ window.swaggerSpec={
           "type" : "string",
           "description" : "User login"
         },
-        "email" : {
-          "type" : "string",
-          "description" : "User email"
-        },
         "description" : {
           "type" : "string",
           "description" : "Free user description label (ex: organization role)"
@@ -208,18 +211,6 @@ window.swaggerSpec={
         "locale" : {
           "type" : "string",
           "description" : "User using browser format"
-        },
-        "timeFormat" : {
-          "type" : "string",
-          "description" : "Time formatting (See https://momentjs.com)"
-        },
-        "dateFormat" : {
-          "type" : "string",
-          "description" : "Date formatting (See https://momentjs.com)"
-        },
-        "dateTimeFormat" : {
-          "type" : "string",
-          "description" : "Date Time formatting (See https://momentjs.com). If not set dateFormat and timeFormat are used to deduce date time format."
         },
         "defaultTags" : {
           "type" : "array",
@@ -244,17 +235,25 @@ window.swaggerSpec={
         "playSoundForInformation" : {
           "type" : "boolean",
           "description" : "If this is set to true, a sound will be played for incoming cards with INFORMATION severity."
+        },
+        "processesStatesNotNotified" : {
+          "type" : "object",
+          "description" : "Filters on processes and states for user feed (exclusion filter)",
+          "additionalProperties" : {
+            "type" : "array",
+            "description" : "List of process states for which the user will not be notified",
+            "items" : {
+              "type" : "string"
+            }
+          }
         }
       },
       "required" : [ "login" ],
       "example" : {
         "login" : "jcleese",
-        "email" : "john.cleese@monty.python.org",
         "description" : "once played Sir Lancelot",
         "timezone" : "Europe/London",
         "locale" : "en-GB",
-        "timeFormat" : "LT",
-        "dateFormat" : "L",
         "defaultTags" : [ "humor", "movies" ]
       }
     },
@@ -272,6 +271,17 @@ window.swaggerSpec={
             "$ref" : "#/definitions/ComputedPerimeter",
             "uniqueItems" : true
           }
+        },
+        "processesStatesNotNotified" : {
+          "type" : "object",
+          "description" : "Filters on processes and states for user feed (exclusion filter)",
+          "additionalProperties" : {
+            "type" : "array",
+            "description" : "List of process states for which the user will not be notified",
+            "items" : {
+              "type" : "string"
+            }
+          }
         }
       }
     },
@@ -286,6 +296,20 @@ window.swaggerSpec={
         },
         "rights" : {
           "$ref" : "#/definitions/RightsEnum"
+        }
+      }
+    },
+    "NotificationFilter" : {
+      "type" : "object",
+      "properties" : {
+        "process" : {
+          "type" : "string"
+        },
+        "states" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     }
@@ -343,20 +367,20 @@ window.swaggerSpec={
           "name" : "user",
           "description" : "User to be created",
           "schema" : {
-            "$ref" : "#/definitions/SimpleUser"
+            "$ref" : "#/definitions/User"
           }
         } ],
         "responses" : {
           "200" : {
             "description" : "OK (user already existed so it was updated)",
             "schema" : {
-              "$ref" : "#/definitions/SimpleUser"
+              "$ref" : "#/definitions/User"
             }
           },
           "201" : {
             "description" : "Created",
             "schema" : {
-              "$ref" : "#/definitions/SimpleUser"
+              "$ref" : "#/definitions/User"
             }
           },
           "400" : {
@@ -421,20 +445,20 @@ window.swaggerSpec={
           "name" : "user",
           "description" : "User to be updated (login should match path parameter)",
           "schema" : {
-            "$ref" : "#/definitions/SimpleUser"
+            "$ref" : "#/definitions/User"
           }
         } ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "schema" : {
-              "$ref" : "#/definitions/SimpleUser"
+              "$ref" : "#/definitions/User"
             }
           },
           "201" : {
             "description" : "Created",
             "schema" : {
-              "$ref" : "#/definitions/SimpleUser"
+              "$ref" : "#/definitions/User"
             }
           },
           "400" : {
@@ -445,6 +469,37 @@ window.swaggerSpec={
           },
           "403" : {
             "description" : "Authenticated users who are not admins can only update their own data"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "users" ],
+        "summary" : "Remove user",
+        "description" : "Remove a user",
+        "operationId" : "deleteUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "login",
+          "description" : "User login",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required user not found"
           }
         }
       }
@@ -721,6 +776,37 @@ window.swaggerSpec={
             "description" : "Required group not found"
           }
         }
+      },
+      "delete" : {
+        "tags" : [ "groups" ],
+        "summary" : "Remove group",
+        "description" : "Remove a group",
+        "operationId" : "deleteGroup",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Group id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required group not found"
+          }
+        }
       }
     },
     "/groups/{id}/users" : {
@@ -898,20 +984,17 @@ window.swaggerSpec={
             "examples" : {
               "application/json" : [ {
                 "id" : "ENTITY1",
-                "name" : "Enity 1 name",
-                "description" : "Entity 1 short description"
+                "name" : "Control Room 1",
+                "description" : "Control Room 1"
               }, {
                 "id" : "ENTITY2",
-                "name" : "Entity 2 name",
-                "description" : "Entity 2 short description"
+                "name" : "Control Room 2",
+                "description" : "Control Room 2"
               } ]
             }
           },
           "401" : {
             "description" : "Authentication required"
-          },
-          "403" : {
-            "description" : "Forbidden - ADMIN role necessary"
           }
         }
       },
@@ -1020,6 +1103,37 @@ window.swaggerSpec={
             "schema" : {
               "$ref" : "#/definitions/Entity"
             }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required entity not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "entities" ],
+        "summary" : "Remove entity",
+        "description" : "Remove an entity",
+        "operationId" : "deleteEntity",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Entity id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          },
+          "400" : {
+            "description" : "Bad request"
           },
           "401" : {
             "description" : "Authentication required"
@@ -1336,6 +1450,37 @@ window.swaggerSpec={
             "schema" : {
               "$ref" : "#/definitions/Perimeter"
             }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          },
+          "404" : {
+            "description" : "Required perimeter not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "perimeters" ],
+        "summary" : "Remove perimeter",
+        "description" : "Remove a perimeter",
+        "operationId" : "deletePerimeter",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "Perimeter id",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          },
+          "400" : {
+            "description" : "Bad request"
           },
           "401" : {
             "description" : "Authentication required"

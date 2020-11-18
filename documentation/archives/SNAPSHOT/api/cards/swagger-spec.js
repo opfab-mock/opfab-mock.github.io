@@ -270,10 +270,19 @@ window.swaggerSpec={
           "description" : "Unique card ID (as defined in the associated process)",
           "readOnly" : true
         },
-        "parentCardUid" : {
+        "parentCardId" : {
           "type" : "string",
-          "description" : "The id of the parent card (optional)",
+          "description" : "The id of the parent card if it's a child card (optional)",
           "readOnly" : true
+        },
+        "initialParentCardUid" : {
+          "type" : "string",
+          "description" : "The uid of the initial parent card if it's a child card (optional). When a card is updated, its id is still the same but not its uid, that's why we store this field initialParentCardUid.",
+          "readOnly" : true
+        },
+        "keepChildCards" : {
+          "type" : "boolean",
+          "description" : "Is true if OperatorFabric must not delete child cards when their parent card is updated"
         },
         "publisher" : {
           "type" : "string",
@@ -298,11 +307,6 @@ window.swaggerSpec={
         "publishDate" : {
           "$ref" : "#/definitions/EpochDate",
           "description" : "The date the card was published (meaning created by the card service)",
-          "readOnly" : true
-        },
-        "deletionDate" : {
-          "$ref" : "#/definitions/EpochDate",
-          "description" : "The date the card was deleted",
           "readOnly" : true
         },
         "lttd" : {
@@ -355,16 +359,14 @@ window.swaggerSpec={
           "$ref" : "#/definitions/Recipient"
         },
         "userRecipients" : {
-          "description" : "Complete list of user recipients at computation time",
-          "readOnly" : true,
+          "description" : "List of user recipients",
           "type" : "array",
           "items" : {
             "type" : "string"
           }
         },
         "groupRecipients" : {
-          "description" : "Complete list of group recipients at computation time",
-          "readOnly" : true,
+          "description" : "List of group recipients",
           "type" : "array",
           "items" : {
             "type" : "string"
@@ -384,7 +386,7 @@ window.swaggerSpec={
           "items" : {
             "type" : "string"
           },
-          "example" : [ "tso1", "tso2" ]
+          "example" : [ "Dispatcher", "Planner" ]
         },
         "entityRecipients" : {
           "description" : "List of entity recipients",
@@ -392,7 +394,7 @@ window.swaggerSpec={
           "items" : {
             "type" : "string"
           },
-          "example" : [ "tso1", "tso2" ]
+          "example" : [ "Dispatcher", "Planner" ]
         },
         "data" : {
           "type" : "object",
@@ -405,6 +407,9 @@ window.swaggerSpec={
         "hasBeenRead" : {
           "type" : "boolean",
           "description" : "Is true if the card was read by current user"
+        },
+        "publisherType" : {
+          "$ref" : "#/definitions/PublisherTypeEnum"
         }
       },
       "required" : [ "publisher", "process", "processVersion", "processInstanceId", "severity", "startDate", "title", "summary", "state" ],
@@ -417,7 +422,6 @@ window.swaggerSpec={
         "processInstanceId" : "MyProcess_001",
         "state" : "started",
         "publishDate" : 1546300800000,
-        "deletionDate" : 1546388200000,
         "lttd" : 1546387230000,
         "startDate" : 1546387200000,
         "endDate" : 1546387250000,
@@ -560,6 +564,14 @@ window.swaggerSpec={
           },
           "description" : "Tags associated with the card"
         },
+        "entitiesAllowedToRespond" : {
+          "description" : "List of entities that have to respond",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "example" : [ "Dispatcher", "Planner" ]
+        },
         "title" : {
           "description" : "Card i18n title",
           "$ref" : "#/definitions/I18n"
@@ -583,9 +595,16 @@ window.swaggerSpec={
           "type" : "boolean",
           "description" : "Is true if the card was read by current user"
         },
-        "parentCardUid" : {
+        "parentCardId" : {
           "type" : "string",
-          "description" : "The uid of its parent card if it's a child card"
+          "description" : "The id of its parent card if it's a child card"
+        },
+        "initialParentCardUid" : {
+          "type" : "string",
+          "description" : "The uid of the initial parent card if it's a child card (optional). When a card is updated, its id is still the same but not its uid, that's why we store this field initialParentCardUid."
+        },
+        "publisherType" : {
+          "$ref" : "#/definitions/PublisherTypeEnum"
         }
       },
       "required" : [ "uid", "id", "processInstanceId", "startDate" ],
@@ -656,6 +675,12 @@ window.swaggerSpec={
           "description" : "Page number"
         }
       }
+    },
+    "PublisherTypeEnum" : {
+      "type" : "string",
+      "description" : "Publisher type >\n* EXTERNAL - The sender is an external service\n* ENTITY - The sender of the card is the user on behalf of the entity",
+      "enum" : [ "EXTERNAL", "ENTITY" ],
+      "example" : "EXTERNAL"
     }
   },
   "paths" : {
@@ -922,13 +947,13 @@ window.swaggerSpec={
         "name" : "id",
         "type" : "string",
         "required" : true,
-        "description" : "The id parameter is constructed as follows : {publisher}_{processInstanceId}"
+        "description" : "The id parameter is constructed as follows : {process}.{processInstanceId}"
       } ],
       "delete" : {
         "operationId" : "deleteProcessCard",
         "tags" : [ "cards", "deletion" ],
-        "summary" : "delete current card",
-        "description" : "delete current card for process id",
+        "summary" : "delete card",
+        "description" : "delete a card",
         "responses" : {
           "200" : {
             "description" : "OK"
@@ -999,7 +1024,7 @@ window.swaggerSpec={
         }
       }
     },
-    "/cards/userRead/{uid}" : {
+    "/cards/userCardRead/{uid}" : {
       "parameters" : [ {
         "in" : "path",
         "name" : "uid",
@@ -1007,11 +1032,11 @@ window.swaggerSpec={
         "required" : true,
         "description" : "The card uid"
       } ],
-      "post" : {
-        "operationId" : "postUserRead",
+      "delete" : {
+        "operationId" : "deleteUserRead",
         "tags" : [ "cards", "update", "read" ],
-        "summary" : "update current card adding a user read",
-        "description" : "update current card users reads, adding a new item, by card id and authenticated user",
+        "summary" : "update current card removing a user read",
+        "description" : "update current card users reads, removing an item, by card id and authenticated user",
         "responses" : {
           "201" : {
             "description" : "Created"

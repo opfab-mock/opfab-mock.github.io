@@ -392,26 +392,53 @@ window.swaggerSpec={
           }
         }
       }
+    },
+    "/businessconfig/processgroups" : {
+      "get" : {
+        "summary" : "Get the groups of processes",
+        "description" : "Get the groups of processes",
+        "operationId" : "getProcessgroups",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessGroups"
+            }
+          },
+          "401" : {
+            "description" : "Authentication required"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Upload file defining the groups of processes",
+        "description" : "Upload file defining the groups of processes. This file must be in json format and is saved to disk, under the name 'processGroups.json'.",
+        "operationId" : "uploadProcessgroups",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "file",
+          "in" : "formData",
+          "description" : "file to upload",
+          "required" : true,
+          "type" : "file"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Successful creation"
+          },
+          "401" : {
+            "description" : "Authentication required"
+          },
+          "403" : {
+            "description" : "Forbidden - ADMIN role necessary"
+          }
+        }
+      }
     }
   },
   "definitions" : {
-    "MenuEntry" : {
-      "type" : "object",
-      "properties" : {
-        "id" : {
-          "type" : "string",
-          "description" : "unique identifier of this menu item for the current process"
-        },
-        "url" : {
-          "type" : "string",
-          "description" : "url of the endpoint for this menu item"
-        },
-        "label" : {
-          "type" : "string",
-          "description" : "i18n key for the label of this menu item. The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')"
-        }
-      }
-    },
     "Process" : {
       "type" : "object",
       "description" : "Business process definition, also listing available resources",
@@ -421,28 +448,12 @@ window.swaggerSpec={
           "description" : "Identifier referencing this process. It should be unique across the OperatorFabric instance."
         },
         "name" : {
-          "type" : "I18n",
+          "type" : "string",
           "description" : "i18n key for the label of this process The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')"
         },
         "version" : {
           "type" : "string",
           "description" : "Process configuration version"
-        },
-        "templates" : {
-          "type" : "array",
-          "description" : "List of templates name (without extension)",
-          "example" : "\"emergency\", \"security\"",
-          "items" : {
-            "type" : "string"
-          }
-        },
-        "csses" : {
-          "type" : "array",
-          "description" : "List of css file names (without extension)",
-          "example" : "tab-style",
-          "items" : {
-            "type" : "string"
-          }
         },
         "states" : {
           "type" : "object",
@@ -464,25 +475,39 @@ window.swaggerSpec={
                 "description" : "This flag indicates the possibility for a card of this kind to be acknowledged on user basis"
               },
               "name" : {
-                "type" : "I18n",
+                "type" : "string",
                 "description" : "i18n key for UI"
               },
               "color" : {
                 "type" : "string",
                 "description" : "use as a display cue in the UI"
+              },
+              "userCardTemplate" : {
+                "type" : "string",
+                "description" : "Name of the template to use when creating a new card"
+              },
+              "secondsBeforeTimeSpanForReminder" : {
+                "type" : "long",
+                "description" : "Seconds before start date in timespan to activate a remind."
               }
             }
           }
         },
-        "menuLabel" : {
-          "type" : "string",
-          "description" : "i18n key for the label of the menu attached to this process (used in case there are several menuEntries) The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')"
-        },
-        "menuEntries" : {
-          "type" : "array",
-          "description" : "describes the menu items to add to UI navbar",
-          "items" : {
-            "$ref" : "#/definitions/MenuEntry"
+        "uiVisibility" : {
+          "type" : "object",
+          "properties" : {
+            "monitoring" : {
+              "type" : "boolean",
+              "description" : "If this flag is set to true, the cards of this process will be visible on the monitoring screen"
+            },
+            "logging" : {
+              "type" : "boolean",
+              "description" : "If this flag is set to true, the cards of this process will be visible on the logging screen"
+            },
+            "calendar" : {
+              "type" : "boolean",
+              "description" : "If this flag is set to true, the cards of this process will be visible on the calendar screen"
+            }
           }
         }
       },
@@ -491,18 +516,6 @@ window.swaggerSpec={
         "id" : "some_business_process",
         "name" : "some_business_process.label",
         "version" : "v1.0",
-        "templates" : [ "emergency", "info" ],
-        "csses" : [ "tab-style", "content-style" ],
-        "menuLabel" : "some_business_process.menu.label",
-        "menuEntries" : [ {
-          "id" : "website",
-          "url" : "http://www.mybusinessconfigpartyapp.com",
-          "label" : "menu.website"
-        }, {
-          "id" : "status",
-          "url" : "http://www.mybusinessconfigpartyapp.com/status",
-          "label" : "menu.status"
-        } ],
         "initial_state" : {
           "details" : [ {
             "title" : {
@@ -552,7 +565,8 @@ window.swaggerSpec={
           "EN" : "My Title",
           "FR" : "Mon Titre"
         }
-      }
+      },
+      "required" : [ "key" ]
     },
     "Detail" : {
       "description" : "Defines the rendering of card details. Each Detail object corresponds to a tab in the details pane.",
@@ -611,6 +625,13 @@ window.swaggerSpec={
         "state" : {
           "description" : "The state of the card triggered by the action",
           "type" : "string"
+        },
+        "externalRecipients" : {
+          "description" : "The recipients that should receive the response card",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },
@@ -619,6 +640,54 @@ window.swaggerSpec={
       "description" : "Response button color >\n* RED - The button will be red in the template\n* GREEN - The button will be green in the template\n* YELLOW - The button will be yellow in the template",
       "enum" : [ "RED", "GREEN", "YELLOW" ],
       "example" : "RED"
+    },
+    "ProcessGroup" : {
+      "description" : "Object containing a list of processes.",
+      "properties" : {
+        "id" : {
+          "description" : "Id of the group",
+          "type" : "string"
+        },
+        "processes" : {
+          "description" : "List of processes included in the group",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "id" ],
+      "example" : {
+        "id" : "processgroup1",
+        "processes" : [ "id_process1", "id_process2" ]
+      }
+    },
+    "ProcessGroups" : {
+      "properties" : {
+        "groups" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ProcessGroup"
+          }
+        },
+        "locale" : {
+          "type" : "object",
+          "properties" : {
+            "en" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            },
+            "fr" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
