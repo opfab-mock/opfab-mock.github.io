@@ -47,11 +47,6 @@ window.swaggerSpec={
       "description" : "Number of items",
       "example" : 10
     },
-    "TimeSpanDisplayModeEnum" : {
-      "type" : "string",
-      "description" : "Time span disply mode >\n* BUBBLE: Only displays Time span start\n* LINE: displays start and end with a junction line",
-      "enum" : [ "BUBBLE", "LINE" ]
-    },
     "CardOperationTypeEnum" : {
       "type" : "string",
       "description" : "Type of operation >\n* ADD - Operation lists cards object to be added\n* UPDATE - Operation lists cards object to be updated\n* DELETE - Operation lists card ids to be deleted",
@@ -159,49 +154,6 @@ window.swaggerSpec={
         "cardIds" : [ 12345, 12346, 12347 ]
       }
     },
-    "Detail" : {
-      "description" : "detail defines html data rendering",
-      "type" : "object",
-      "properties" : {
-        "title" : {
-          "description" : "Card i18n title",
-          "$ref" : "#/definitions/I18n"
-        },
-        "titleStyle" : {
-          "description" : "css classes applied to title",
-          "type" : "string"
-        },
-        "titlePosition" : {
-          "description" : "Title position",
-          "$ref" : "#/definitions/TitlePositionEnum"
-        },
-        "templateName" : {
-          "description" : "template unique name as defined by Businessconfig Party Bundle in Businessconfig Party Service",
-          "type" : "string"
-        },
-        "styles" : {
-          "description" : "css files names to load as defined by Businessconfig Party Bundle in Businessconfig Party Service",
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        }
-      },
-      "required" : [ "title", "templateName" ],
-      "example" : {
-        "title" : {
-          "key" : "myCard.title",
-          "parameters" : {
-            "EN" : "My card title",
-            "FR" : "Mon titre de carte"
-          },
-          "titlePosition" : "UP",
-          "titleStyle" : "myTitleStyle.css",
-          "templateName" : "template1",
-          "styles" : [ "bundleTest.css", "otherStyle.css" ]
-        }
-      }
-    },
     "Recipient" : {
       "description" : "Recipient object defines rules for recipient computation",
       "type" : "object",
@@ -249,12 +201,46 @@ window.swaggerSpec={
           "$ref" : "#/definitions/EpochDate",
           "description" : "Span end (must be after start)"
         },
-        "display" : {
-          "$ref" : "#/definitions/TimeSpanDisplayModeEnum",
-          "description" : "defaults to BUBBLE if only start is set and to LINE if start and end are set"
+        "recurrence" : {
+          "$ref" : "#/definitions/Recurrence",
+          "description" : "recurrence of the timeSpan"
         }
       },
       "required" : [ "start" ]
+    },
+    "Recurrence" : {
+      "type" : "object",
+      "description" : "An object to define recurrence of timeSpans",
+      "properties" : {
+        "hoursAndMinutes" : {
+          "$ref" : "#/definitions/HoursAndMinutes",
+          "description" : "hours and minutes"
+        },
+        "daysOfWeek" : {
+          "description" : "Days of the week for the recurrence",
+          "type" : "array",
+          "items" : {
+            "type" : "integer"
+          }
+        },
+        "timeZone" : {
+          "description" : "Time zone reference for the recurrence definition",
+          "type" : "string"
+        }
+      },
+      "required" : [ "hoursAndMinutes" ]
+    },
+    "HoursAndMinutes" : {
+      "type" : "object",
+      "description" : "An object to represent a time with only hours and minutes",
+      "properties" : {
+        "hours" : {
+          "type" : "integer"
+        },
+        "minutes" : {
+          "type" : "integer"
+        }
+      }
     },
     "Card" : {
       "type" : "object",
@@ -339,13 +325,6 @@ window.swaggerSpec={
             "$ref" : "#/definitions/TimeSpan"
           }
         },
-        "details" : {
-          "type" : "array",
-          "description" : "List of card associated details",
-          "items" : {
-            "$ref" : "#/definitions/Detail"
-          }
-        },
         "title" : {
           "description" : "Card i18n title",
           "$ref" : "#/definitions/I18n"
@@ -410,6 +389,9 @@ window.swaggerSpec={
         },
         "publisherType" : {
           "$ref" : "#/definitions/PublisherTypeEnum"
+        },
+        "secondsBeforeTimeSpanForReminder" : {
+          "type" : "integer"
         }
       },
       "required" : [ "publisher", "process", "processVersion", "processInstanceId", "severity", "startDate", "title", "summary", "state" ],
@@ -442,19 +424,6 @@ window.swaggerSpec={
             }
           }
         } ],
-        "details" : {
-          "title" : {
-            "key" : "myCard.title",
-            "parameters" : {
-              "EN" : "My card title",
-              "FR" : "Mon titre de carte"
-            }
-          },
-          "titlePosition" : "UP",
-          "titleStyle" : "myTitleStyle.css",
-          "templateName" : "template1",
-          "styles" : [ "bundleTest.css", "otherStyle.css" ]
-        },
         "title" : {
           "key" : "myservice.myprocess.title",
           "parameters" : {
@@ -605,6 +574,9 @@ window.swaggerSpec={
         },
         "publisherType" : {
           "$ref" : "#/definitions/PublisherTypeEnum"
+        },
+        "secondsBeforeTimeSpanForReminder" : {
+          "type" : "integer"
         }
       },
       "required" : [ "uid", "id", "processInstanceId", "startDate" ],
